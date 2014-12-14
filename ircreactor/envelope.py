@@ -100,6 +100,9 @@ class RFC1459Message(object):
 
         return ' '.join(components)
 
+    def to_event(self):
+        return "message " + self.verb, self.__dict__
+
     def serialize(self):
         return self.__dict__
 
