@@ -46,7 +46,7 @@ class RFC1459Message(object):
 
         tags = None
         if s[0].startswith('@'):
-            tag_str = s[0][1:].split(',')
+            tag_str = s[0][1:].split(';')
             s = s[1:]
             tags = {}
 
@@ -88,7 +88,7 @@ class RFC1459Message(object):
         components = []
 
         if self.tags:
-            components.append('@' + ','.join([k + '=' + v for k, v in self.tags.items()]))
+            components.append('@' + ';'.join([k + '=' + v for k, v in self.tags.items()]))
 
         if self.source:
             components.append(':' + self.source)
@@ -118,7 +118,7 @@ def test_rfc1459message():
     print(RFC1459Message.from_message('CAPAB '))
 
     print('====== STRUCTURE TESTS ======')
-    m = RFC1459Message.from_message('@foo=bar,bar=baz :irc.tortois.es 001 kaniini :Welcome to IRC, kaniini!')
+    m = RFC1459Message.from_message('@foo=bar;bar=baz :irc.tortois.es 001 kaniini :Welcome to IRC, kaniini!')
     pprint(m.serialize())
 
     print('====== BUILDER TESTS ======')
