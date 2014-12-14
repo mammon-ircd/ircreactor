@@ -25,5 +25,5 @@ class IRCReactor(object):
         self.ev_manager = ev_manager
 
     def data_received(self, data):
-        m = RFC1459Message.from_message(data.decode('UTF-8', 'replace').strip(b'\r\n'))
+        m = RFC1459Message.from_message(data.decode('UTF-8', 'replace').strip('\r\n'))
         return self.ev_manager.dispatch(*m.to_event())
