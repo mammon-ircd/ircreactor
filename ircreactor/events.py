@@ -39,8 +39,9 @@ class EventReceiver(object):
     """An internal object which tracks event subscriptions, acting as a handle for the event system.
        To unsubscribe an event, simply delete the handle, using del."""
     def __init__(self, event, callable, manager=None):
-        self.eo = events.get(event, EventObject(event, manager))
-        self.eo.attach(self)
+        if manager:
+            self.eo = manager.events.get(event, EventObject(event, manager))
+            self.eo.attach(self)
         self.event = event
         self.callable = callable
 
