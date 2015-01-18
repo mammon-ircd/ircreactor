@@ -76,10 +76,11 @@ class RFC1459Message(object):
     def args_to_message(self):
         base = []
         for arg in self.params:
-            if ' ' not in arg:
-                base.append(arg)
+            casted = str(arg)
+            if ' ' not in casted and casted[0] != ':':
+                base.append(casted)
             else:
-                base.append(':' + arg)
+                base.append(':' + casted)
                 break
 
         return ' '.join(base)
