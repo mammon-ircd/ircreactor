@@ -17,6 +17,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 class EventObject(object):
     """An object for managing a specific event type.  Handles dispatch to interested subscribers.
        Call EventObject.dispatch() with the event message dictionary to actually do the dispatch.
@@ -63,7 +65,7 @@ class EventManager(object):
            Side effects:
                If an EventObject is not already registered with the EventManager,
                a new EventObject will be created and registered."""
-        logging.debug('dispatching: ' + event + ': ' + repr(ev_msg))
+        logger.debug('dispatching: ' + event + ': ' + repr(ev_msg))
         eo = self.events.get(event, EventObject(event, self))
         eo.dispatch(ev_msg)
 
@@ -73,5 +75,5 @@ class EventManager(object):
                callable: the callable to be used as a callback function
            Returns an EventReceiver object.  To unregister interest, simply
            delete the object."""
-        logging.debug('registered: ' + event + ': ' + repr(callable))
+        logger.debug('registered: ' + event + ': ' + repr(callable))
         return EventReceiver(event, callable, self)
