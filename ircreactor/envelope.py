@@ -77,7 +77,7 @@ class RFC1459Message(object):
         base = []
         for arg in self.params:
             casted = str(arg)
-            if ' ' not in casted and casted[0] != ':':
+            if casted and ' ' not in casted and casted[0] != ':':
                 base.append(casted)
             else:
                 base.append(':' + casted)
