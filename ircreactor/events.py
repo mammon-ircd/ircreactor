@@ -29,7 +29,8 @@ class EventObject(object):
         self.subscribers = list()
 
     def attach(self, receiver):
-        self.subscribers.append(receiver)
+        nlist = self.subscribers + [receiver]
+        self.subscribers = sorted(nlist, key=lambda x: x.priority)
 
     def detach(self, receiver):
         self.subscribers.remove(receiver)
@@ -40,12 +41,13 @@ class EventObject(object):
 class EventReceiver(object):
     """An internal object which tracks event subscriptions, acting as a handle for the event system.
        To unsubscribe an event, simply delete the handle, using del."""
-    def __init__(self, event, callable, manager=None):
+    def __init__(self, event, callable, manager=None, priority=10):
+        self.event = event
+        self.callable = callable
+        self.priority = priority
         if manager:
             self.eo = manager.events.get(event, EventObject(event, manager))
             self.eo.attach(self)
-        self.event = event
-        self.callable = callable
 
     def __del__(self):
         if self.eo:
@@ -69,11 +71,11 @@ class EventManager(object):
         eo = self.events.get(event, EventObject(event, self))
         eo.dispatch(ev_msg)
 
-    def register(self, event, callable):
+    def register(self, event, callable, priority=10):
         """Register interest in an event.
                event: name of the event (str)
                callable: the callable to be used as a callback function
            Returns an EventReceiver object.  To unregister interest, simply
            delete the object."""
         logger.debug('registered: ' + event + ': ' + repr(callable))
-        return EventReceiver(event, callable, self)
+        return EventReceiver(event, callable, manager=self, priority=priority)
