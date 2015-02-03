@@ -46,7 +46,9 @@ class EventReceiver(object):
         self.callable = callable
         self.priority = priority
         if manager:
-            self.eo = manager.events.get(event, EventObject(event, manager))
+            self.eo = manager.events.get(event, None)
+            if not self.eo:
+                self.eo = EventObject(event, manager)
             self.eo.attach(self)
 
     def __del__(self):
@@ -68,8 +70,9 @@ class EventManager(object):
                If an EventObject is not already registered with the EventManager,
                a new EventObject will be created and registered."""
         logger.debug('dispatching: ' + event + ': ' + repr(ev_msg))
-        eo = self.events.get(event, EventObject(event, self))
-        eo.dispatch(ev_msg)
+        eo = self.events.get(event, None)
+        if eo:
+            eo.dispatch(ev_msg)
 
     def register(self, event, callable, priority=10):
         """Register interest in an event.
@@ -77,5 +80,5 @@ class EventManager(object):
                callable: the callable to be used as a callback function
            Returns an EventReceiver object.  To unregister interest, simply
            delete the object."""
-        logger.debug('registered: ' + event + ': ' + repr(callable))
+        logger.debug('registered: ' + event + ': ' + repr(callable) + ' [' + repr(self) + ']')
         return EventReceiver(event, callable, manager=self, priority=priority)
