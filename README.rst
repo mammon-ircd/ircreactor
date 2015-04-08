@@ -1,6 +1,8 @@
 ircreactor
 ==========
 
+**NOTE:** This software is in ALPHA and not yet ready for production. APIs *can* and likely will change as we develop the library further.
+
 ircreactor is a library for the conversion of IRC messages into
 intermediate objects. In other words, ircreactor provides the following
 functionality:
