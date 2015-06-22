@@ -51,8 +51,11 @@ class RFC1459Message(object):
             tags = {}
 
             for tag in tag_str:
-                k, v = tag.split('=', 1)
-                tags[k] = v
+                if '=' in tag:
+                    k, v = tag.split('=', 1)
+                    tags[k] = v
+                else:
+                    tags[tag] = True
 
         source = None
         if s[0].startswith(':'):
