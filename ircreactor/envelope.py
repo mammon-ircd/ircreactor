@@ -60,16 +60,20 @@ class RFC1459Message(object):
             s = s[1:]
 
         verb = s[0].upper()
-        params = s[1:]
+        original_params = s[1:]
+        params = []
 
-        for param in params:
-            if param.startswith(':'):
-                idx = params.index(param)
-                arg = ' '.join(params[idx:])
-                arg = arg[1:]
-                params = params[:idx]
+        while len(original_params):
+            # skip multiple spaces in middle of message, as per 1459
+            if original_params[0] == '' and len(original_params) > 1:
+                original_params.pop(0)
+                continue
+            elif original_params[0].startswith(':'):
+                arg = ' '.join(original_params)[1:]
                 params.append(arg)
                 break
+            else:
+                params.append(original_params.pop(0))
 
         return cls.from_data(verb, params, source, tags)
 
